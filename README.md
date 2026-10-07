@@ -38,3 +38,5 @@ Deploy an Nginx container as a Kubernetes Pod and expose it using a NodePort Ser
 
 minikube start
 
+<img width="1917" height="1027" alt="image" src="https://github.com/user-attachments/assets/32265d78-9c07-4c97-b7a9-af143c4d6b9e" />
+
