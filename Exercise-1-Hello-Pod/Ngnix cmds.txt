@@ -1,0 +1,44 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\Hruth> minikube start
+😄  minikube v1.38.1 on Microsoft Windows 11 Home Single Language 25H2
+🎉  minikube 1.39.0 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.39.0
+💡  To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.50 ...
+💾  Downloading Kubernetes v1.35.1 preload ...
+    > preloaded-images-k8s-v18-v1...:  272.45 MiB / 272.45 MiB  100.00% 10.12 M
+🏃  Updating the running docker "minikube" container ...-E1007 09:10:04.580884   26244 cache.go:253] Error caching images:  Caching images: caching images: caching image "C:\\Users\\Hruth\\.minikube\\cache\\images\\amd64\\gcr.io\\k8s-minikube\\storage-provisioner_v5": getting destination path: parsing docker archive dst ref: replace a Win drive letter to a volume name: PowerShell command failed: exit status 0xc0000005
+🏃  Updating the running docker "minikube" container ...
+🐳  Preparing Kubernetes v1.35.1 on Docker 29.2.1 ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+PS C:\Users\Hruth> kubectl run hello-k8s --image=nginx --port=80kubectl run hello-k8s --image=nginx --port=80
+Error from server (AlreadyExists): pods "hello-k8s" already exists
+PS C:\Users\Hruth> kubectl get pods
+NAME        READY   STATUS   RESTARTS   AGE
+hello-k8s   0/1     Error    0          45d
+PS C:\Users\Hruth> kubectl expose pod hello-k8s --type=NodePort --port=80
+Error from server (AlreadyExists): services "hello-k8s" already exists
+PS C:\Users\Hruth> minikube service hello-k8s
+┌───────────┬───────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │   NAME    │ TARGET PORT │            URL            │
+├───────────┼───────────┼─────────────┼───────────────────────────┤
+│ default   │ hello-k8s │ 80          │ http://192.168.49.2:31686 │
+└───────────┴───────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service hello-k8s.
+┌───────────┬───────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │   NAME    │ TARGET PORT │          URL           │
+├───────────┼───────────┼─────────────┼────────────────────────┤
+│ default   │ hello-k8s │             │ http://127.0.0.1:58367 │
+└───────────┴───────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/hello-k8s in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+
+
