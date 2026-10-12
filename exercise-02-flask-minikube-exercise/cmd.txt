@@ -1,0 +1,132 @@
+Microsoft Windows [Version 10.0.26200.9457]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Hruth>docker --version
+Docker version 29.4.1, build 055a478
+
+C:\Users\Hruth>minikube version
+minikube version: v1.38.1
+commit: c93a4cb9311efc66b90d33ea03f75f2c4120e9b0
+
+C:\Users\Hruth>kubectl version --client
+Client Version: v1.36.4
+Kustomize Version: v5.8.1
+
+C:\Users\Hruth>git --version
+git version 2.53.0.windows.2
+
+C:\Users\Hruth>mkdir flask-minikube-exercise
+
+C:\Users\Hruth>cd flask-minikube-exercise
+
+C:\Users\Hruth\flask-minikube-exercise>code .
+
+C:\Users\Hruth\flask-minikube-exercise>minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Home Single Language 25H2
+* minikube 1.39.0 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.39.0
+* To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+* Using the docker driver based on existing profile
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.50 ...
+* Downloading Kubernetes v1.35.1 preload ...
+* Restarting existing docker container for "minikube" ...
+* Preparing Kubernetes v1.35.1 on Docker 29.2.1 ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: default-storageclass, storage-provisioner
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+C:\Users\Hruth\flask-minikube-exercise>minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl cluster-info
+Kubernetes control plane is running at https://127.0.0.1:49683
+CoreDNS is running at https://127.0.0.1:49683/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+
+C:\Users\Hruth\flask-minikube-exercise>docker build -t flask-app:latest .
+[+] Building 40.0s (10/10) FINISHED                                                                docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                               0.2s
+ => => transferring dockerfile: 181B                                                                               0.0s
+ => [internal] load metadata for docker.io/library/python:3.11-slim                                                3.6s
+ => [auth] library/python:pull token for registry-1.docker.io                                                      0.0s
+ => [internal] load .dockerignore                                                                                  0.1s
+ => => transferring context: 2B                                                                                    0.0s
+ => [1/4] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af  13.0s
+ => => resolve docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9  0.1s
+ => => sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 14.46MB / 14.46MB                   5.2s
+ => => sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 250B / 250B                         0.8s
+ => => sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 1.29MB / 1.29MB                     2.4s
+ => => sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 29.84MB / 29.84MB                   6.9s
+ => => extracting sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e                          3.7s
+ => => extracting sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca                          0.4s
+ => => extracting sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1                          1.6s
+ => => extracting sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d                          0.1s
+ => [internal] load build context                                                                                  0.1s
+ => => transferring context: 236B                                                                                  0.0s
+ => [2/4] WORKDIR /app                                                                                             0.4s
+ => [3/4] RUN pip install --no-cache-dir flask                                                                    14.9s
+ => [4/4] COPY app.py .                                                                                            0.8s
+ => exporting to image                                                                                             5.9s
+ => => exporting layers                                                                                            4.0s
+ => => exporting manifest sha256:93e6f04543fac4d6cf5b79e8c967424de86398e1676665d156ffa631887bab83                  0.0s
+ => => exporting config sha256:bd2c332c8c8a12d153763b282548359dc305ba49e4b133935a26dc2c18816913                    0.0s
+ => => exporting attestation manifest sha256:af5100ef514e74b86c0defec72d4a1e37db2268831febad7b9eee4fddfef403b      0.1s
+ => => exporting manifest list sha256:40931572cfa1a26ecae7b84b3d08388fc620101502ec9432dc91831d8c79456e             0.0s
+ => => naming to docker.io/library/flask-app:latest                                                                0.0s
+ => => unpacking to docker.io/library/flask-app:latest                                                             1.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/w4kmchfcivs5g4cdan7s0id2c
+
+C:\Users\Hruth\flask-minikube-exercise>minikube image load flask-app:latest
+
+C:\Users\Hruth\flask-minikube-exercise>minikube image ls
+registry.k8s.io/pause:3.10.1
+registry.k8s.io/kube-scheduler:v1.35.1
+registry.k8s.io/kube-proxy:v1.35.1
+registry.k8s.io/kube-controller-manager:v1.35.1
+registry.k8s.io/kube-apiserver:v1.35.1
+registry.k8s.io/etcd:3.6.6-0
+registry.k8s.io/coredns/coredns:v1.13.1
+gcr.io/k8s-minikube/storage-provisioner:v5
+docker.io/library/nginx:latest
+docker.io/library/flask-app:latest
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl apply -f flask-deployment.yaml
+deployment.apps/flask-app created
+service/flask-app-service created
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl get deployments
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+flask-app   1/1     1            1           31s
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl get pods -l app=flask-app
+NAME                         READY   STATUS    RESTARTS   AGE
+flask-app-6d58f88547-9v87t   1/1     Running   0          45s
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl get services
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+flask-app-service   NodePort    10.103.18.245   <none>        15000:30983/TCP   61s
+hello-k8s           NodePort    10.105.242.0    <none>        80:31686/TCP      51d
+kubernetes          ClusterIP   10.96.0.1       <none>        443/TCP           51d
+
+C:\Users\Hruth\flask-minikube-exercise>kubectl logs deployment/flask-app
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:15000
+ * Running on http://10.244.0.10:15000
+Press CTRL+C to quit
+
+C:\Users\Hruth\flask-minikube-exercise>minikube service flask-app-service --url
+http://127.0.0.1:51703
+! Because you are using a Docker driver on windows, the terminal needs to be open to run it.
