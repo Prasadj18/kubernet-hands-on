@@ -1,0 +1,258 @@
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker build -t flask-api:1.0 .
+[+] Building 0.6s (1/1) FINISHED                                                                                                          docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                      0.2s
+ => => transferring dockerfile: 2B                                                                                                                        0.1s
+ERROR: failed to build: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/k0m3470sq32dt2nxqbcze1kvo
+
+What's next:
+    Debug this build failure with Gordon → docker ai "help me fix this build failure"
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker images
+                                                                                                                                           i Info →   U  In Use
+IMAGE                                                                                    ID             DISK USAGE   CONTENT SIZE   EXTRA
+flask-app:latest                                                                         40931572cfa1        211MB         51.3MB        
+kicbase/stable:v0.0.50                                                                   b97074569ae9       1.94GB          545MB        
+kicbase/stable@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93   eb4fec00e8ad       1.94GB          545MB    U   
+pgvector/pgvector:pg17                                                                   ac08538c6f8b        637MB          161MB    U   
+postgres:15-alpine                                                                       fe0737ba566a        417MB          116MB    U   
+postgres:16                                                                              c1b3783309b6        642MB          166MB        
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker build -t flask-api:1.0 .
+[+] Building 33.1s (11/11) FINISHED                                                                                                       docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                      0.2s
+ => => transferring dockerfile: 215B                                                                                                                      0.2s
+ => [internal] load metadata for docker.io/library/python:3.11-slim                                                                                       3.0s
+ => [auth] library/python:pull token for registry-1.docker.io                                                                                             0.0s
+ => [internal] load .dockerignore                                                                                                                         0.1s
+ => => transferring context: 2B                                                                                                                           0.0s
+ => [1/5] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce                                 0.1s
+ => => resolve docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce                                 0.1s
+ => [internal] load build context                                                                                                                         0.4s
+ => => transferring context: 526B                                                                                                                         0.3s
+ => CACHED [2/5] WORKDIR /app                                                                                                                             0.0s
+ => [3/5] COPY requirements.txt .                                                                                                                         0.1s
+ => [4/5] RUN pip install --no-cache-dir -r requirements.txt                                                                                             22.8s
+ => [5/5] COPY app.py .                                                                                                                                   0.3s 
+ => exporting to image                                                                                                                                    5.3s 
+ => => exporting layers                                                                                                                                   2.7s 
+ => => exporting manifest sha256:d1b581f05c833d681f98bf3ea6580a8801c0ae2fd1b72da740922e0ec36316ad                                                         0.1s 
+ => => exporting config sha256:b2dc3e6b2a68ccb8c9c14c5370f2626ac49d34a695bb0caafde8fdb600f1d7aa                                                           0.1s 
+ => => exporting attestation manifest sha256:a831b6b659c7134018ff4c5ebbb2d5430edec472a0bca3c95a83f197e7d676df                                             0.1s 
+ => => exporting manifest list sha256:eb291448a29b638dcf52f10993bd41641d4eb8a81b1fb9640ca8c761a99171f5                                                    0.0s
+ => => naming to docker.io/library/flask-api:1.0                                                                                                          0.0s
+ => => unpacking to docker.io/library/flask-api:1.0                                                                                                       1.9s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/qi8k8al9a0sk274ahor3yefzi
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker images flask-api
+                                                                                                                                           i Info →   U  In Use
+IMAGE           ID             DISK USAGE   CONTENT SIZE   EXTRA
+flask-api:1.0   eb291448a29b        211MB         51.3MB        
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker network create --driver bridge my-bridge-net
+312cd2ddb28bbb27b0e5a0083078c68333ed70a6398b7489b154abe43febb12d
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker network ls
+NETWORK ID     NAME                   DRIVER    SCOPE
+392ca18b41cd   bridge                 bridge    local
+95c0a42f1e47   documind_default       bridge    local
+3a97edcd60be   host                   host      local
+b3fdd36b9ad4   minikube               bridge    local
+312cd2ddb28b   my-bridge-net          bridge    local
+a94b2e76a819   none                   null      local
+19da302caaa6   placementhub_default   bridge    local
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker network inspect my-bridge-net
+[
+    {
+        "Name": "my-bridge-net",
+        "Id": "312cd2ddb28bbb27b0e5a0083078c68333ed70a6398b7489b154abe43febb12d",
+        "Created": "2026-10-14T04:10:59.884248501Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {},
+        "Containers": {},
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.20.0.0/16": {
+                        "IPsInUse": 3,
+                        "DynamicIPsAvailable": 65533
+                    }
+                }
+            }
+        }
+    }
+]
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker run -d --name mysql --network my-bridge-net -e MYSQL_ROOT_PASSWORD=Exercise4Pass123 mysql:8.4
+Unable to find image 'mysql:8.4' locally
+8.4: Pulling from library/mysql
+e896da32f635: Pull complete 
+3527249a8025: Pull complete 
+bf11ec3e7e56: Pull complete 
+15ba404f5528: Pull complete 
+ad73434ffdad: Pull complete 
+d4cc7515d7b7: Pull complete 
+4ba189089539: Pull complete 
+81077ec0e5ac: Pull complete 
+6b54d15c954d: Pull complete 
+f51a9a1f0d20: Pull complete 
+c3aa1963b3d3: Download complete 
+8e537378399f: Download complete 
+Digest: sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70
+Status: Downloaded newer image for mysql:8.4
+8d709548b808b78d8b2082e67eb0b622de7948d1ef08e7fe0eb957b63f4f0cb8
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS                    PORTS                                         NAMES
+8d709548b808   mysql:8.4                "docker-entrypoint.s…"   26 seconds ago   Up 23 seconds             3306/tcp, 33060/tcp                           mysql
+adbdd0dda46a   pgvector/pgvector:pg17   "docker-entrypoint.s…"   3 days ago       Up 11 minutes (healthy)   127.0.0.1:5433->5432/tcp                      documind-postgres
+23055da4e0eb   postgres:15-alpine       "docker-entrypoint.s…"   5 weeks ago      Up 11 minutes             0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   placementhub-db
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker logs mysql
+2026-10-14 04:13:43+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.4.11-1.el9 started.
+2026-10-14 04:13:45+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-10-14 04:13:45+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.4.11-1.el9 started.
+2026-10-14 04:13:46+00:00 [Note] [Entrypoint]: Initializing database files
+2026-10-14T04:13:46.381429Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2026-10-14T04:13:46.389687Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.4.11) initializing of server in progress as process 80
+2026-10-14T04:13:46.435301Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-14T04:13:47.631327Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-14T04:13:51.565242Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2026-10-14T04:13:56.303451Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.
+2026-10-14 04:13:56+00:00 [Note] [Entrypoint]: Database files initialized
+2026-10-14 04:13:56+00:00 [Note] [Entrypoint]: Starting temporary server
+2026-10-14T04:13:56.759592Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-10-14T04:13:58.623237Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.4.11) starting as process 123
+2026-10-14T04:13:58.797477Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-14T04:14:00.540309Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-14T04:14:01.857775Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-10-14T04:14:01.857902Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-10-14T04:14:01.872689Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2026-10-14T04:14:01.961533Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock
+2026-10-14T04:14:01.961706Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.4.11'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.
+2026-10-14 04:14:02+00:00 [Note] [Entrypoint]: Temporary server started.
+'/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+
+2026-10-14 04:14:10+00:00 [Note] [Entrypoint]: Stopping temporary server
+2026-10-14T04:14:10.803867Z 10 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.4.11).
+2026-10-14 04:14:11+00:00 [Note] [Entrypoint]: Temporary server stopped
+
+2026-10-14 04:14:11+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
+
+2026-10-14T04:14:12.204779Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 8.4.11)  MySQL Community Server - GPL.
+2026-10-14T04:14:12.204874Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+2026-10-14T04:14:11.999196Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-10-14T04:14:13.779851Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.4.11) starting as process 1
+2026-10-14T04:14:13.821876Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker run -d --name redis --network my-bridge-net redis:7
+Unable to find image 'redis:7' locally
+7: Pulling from library/redis
+c1162fec059b: Pull complete 
+faaaf6ba362b: Pull complete 
+88b125c05b23: Pull complete 
+4f4fb700ef54: Pull complete 
+ec5b838b30d5: Pull complete 
+6988465984f0: Pull complete 
+7fd1ebe418b5: Pull complete 
+db062982bd98: Download complete 
+7f940e7da078: Download complete 
+Digest: sha256:4fa24486b8bcca8eec45ee0eb166edc674795e53a2b53d1a9ef263eecebaac85
+Status: Downloaded newer image for redis:7
+f91c136a3cbce7378eb30e5c7beb5d7bb1286bab06b0eb492de598fe79c18641
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker run -d --name flask --network my-bridge-net -p 5001:5001 flask-api:1.0
+692da4e18036b8d7936c8e02128e3beeca28775182e97b98a81cd16c599708e2
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS                    PORTS                                         NAMES
+692da4e18036   flask-api:1.0            "python app.py"          13 seconds ago   Up 12 seconds             0.0.0.0:5001->5001/tcp, [::]:5001->5001/tcp   flask
+f91c136a3cbc   redis:7                  "docker-entrypoint.s…"   2 minutes ago    Up About a minute         6379/tcp                                      redis
+8d709548b808   mysql:8.4                "docker-entrypoint.s…"   3 minutes ago    Up 3 minutes              3306/tcp, 33060/tcp                           mysql
+adbdd0dda46a   pgvector/pgvector:pg17   "docker-entrypoint.s…"   3 days ago       Up 14 minutes (healthy)   127.0.0.1:5433->5432/tcp                      documind-postgres
+23055da4e0eb   postgres:15-alpine       "docker-entrypoint.s…"   5 weeks ago      Up 14 minutes             0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   placementhub-db
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker exec flask python -c "import socket; s=socket.create_connection(('mysql',3306),timeout=5); print('MySQL reachable'); s.close(); s=socket.create_connection(('redis',6379),timeout=5); print('Redis reachable'); s.close()"
+MySQL reachable
+Redis reachable
+PS D:\Kubernetes-Hands-On\exercise-04-docker-networking> docker network inspect my-bridge-net
+[
+    {
+        "Name": "my-bridge-net",
+        "Id": "312cd2ddb28bbb27b0e5a0083078c68333ed70a6398b7489b154abe43febb12d",
+        "Created": "2026-10-14T04:10:59.884248501Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {},
+        "Containers": {
+            "692da4e18036b8d7936c8e02128e3beeca28775182e97b98a81cd16c599708e2": {
+                "Name": "flask",
+                "EndpointID": "f750fbc586f1dff6153f253a4fce63e3f56f3cb1a1dfae321de60146534e20f9",
+                "MacAddress": "b2:eb:7f:b6:99:f3",
+                "IPv4Address": "172.20.0.4/16",
+                "IPv6Address": ""
+            },
+            "8d709548b808b78d8b2082e67eb0b622de7948d1ef08e7fe0eb957b63f4f0cb8": {
+                "Name": "mysql",
+                "EndpointID": "26a3bb1a1ad9c7b7ee55713da572d667e1b34b4592ac6047d3c968c343b10984",
+                "MacAddress": "6e:18:cc:8b:57:a6",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            },
+            "f91c136a3cbce7378eb30e5c7beb5d7bb1286bab06b0eb492de598fe79c18641": {
+                "Name": "redis",
+                "EndpointID": "6a31cdfcd28918c9a7a59d845a8a0be57a29895423b9addf684c5e60f6d7df96",
+                "MacAddress": "0a:13:51:a6:6a:8b",
+                "IPv4Address": "172.20.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.20.0.0/16": {
+                        "IPsInUse": 6,
+                        "DynamicIPsAvailable": 65530
+                    }
+                }
+            }
+        }
+    }
+]
