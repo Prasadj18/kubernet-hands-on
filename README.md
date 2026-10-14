@@ -171,6 +171,66 @@ kubectl delete -f flashsale-replicaset.yaml
 ```
 
 
+# Exercise 4: Docker Networking with Multiple Containers
+
+## Objective
+Configure a custom Docker bridge network and enable communication between Flask, MySQL, and Redis containers.
+
+## Technologies Used
+- Docker
+- Python
+- Flask
+- MySQL
+- Redis
+
+## Implementation
+1. Created a custom bridge network named `my-bridge-net`.
+2. Built the Flask REST API image.
+3. Started MySQL, Redis, and Flask containers on the same network.
+4. Published the Flask application on port 5001.
+5. Tested API endpoints and container connectivity.
+6. Inspected the network and connected containers.
+
+## API Endpoints
+- `/about` — Returns application information.
+- `/health` — Returns application health status.
+
+## Key Learnings
+- Bridge networks enable communication between containers.
+- Docker DNS resolves container names to their network addresses.
+- Port publishing exposes container services to the host.
+- Containers can communicate without publishing their internal ports.
+
+## Questions and Answers
+
+**1. What does `--network` do?**
+
+Connects a container to a specified Docker network.
+
+**2. How do containers communicate?**
+
+Containers on the same user-defined bridge network can communicate using container names and service ports.
+
+**3. Bridge network vs. host network?**
+
+Bridge networking provides an isolated container network. Host networking shares the host's network stack, subject to platform-specific behavior.
+
+**4. How do you expose a container port?**
+
+Use `-p HOST_PORT:CONTAINER_PORT`, for example `-p 5001:5001`.
+
+## Cleanup
+```bash
+docker rm -f flask mysql redis
+docker network rm my-bridge-net
+```
+
+## Expected Outcome
+Three containers running on a custom bridge network, with successful Flask API access and verified connectivity to MySQL and Redis.
+
+## Evidence
+See the `screenshots/` directory for execution results.
+
 
 ```bash
 
