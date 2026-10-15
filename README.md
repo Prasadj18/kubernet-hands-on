@@ -307,11 +307,11 @@ The Flask application was containerized successfully, and the Docker SDK scripts
 
 
 
+# Exercise 6: Real-Time Operations Monitoring and Alerting
 ```bash
 
 minikube start
 
-# Exercise 6: Real-Time Operations Monitoring and Alerting
 
 ## Objective
 Build a real-time monitoring system for a delivery service using Python, Prometheus, Grafana, Docker, and Jenkins.
