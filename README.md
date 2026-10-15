@@ -675,3 +675,101 @@ Successfully demonstrated how to store a shell script in GitHub and configure a 
 
 ## Conclusion
 Jenkins simplifies task automation by executing scripts through configured jobs. Integrating Jenkins with GitHub provides a foundation for automated build and test workflows.
+
+
+# Exercise 9: Jenkins Multi-Stage Pipeline for Python Flask Application
+
+## Objective
+To create and execute a Jenkins Pipeline that automates the build, test, deployment, and execution of a Python Flask application.
+
+## Technologies Used
+- Python
+- Flask
+- Jenkins
+- Docker
+- Git and GitHub
+- Python unittest
+
+## Project Structure
+
+```text
+exercise-09-jenkins-multistage-pipeline/
+├── app.py
+├── requirements.txt
+├── test_app.py
+├── Jenkinsfile
+└── README.md
+```
+
+## 1. Python Flask Application
+
+The application is defined in `app.py` and exposes a home endpoint (`/`).
+
+Expected response:
+
+```text
+Hello, Jenkins Multi-Stage Pipeline!
+```
+
+## 2. Dependencies
+
+The `requirements.txt` file specifies Flask as the application dependency.
+
+Install dependencies using:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+## 3. Unit Testing
+
+The `test_app.py` file uses Python's `unittest` framework and Flask's test client to verify the home endpoint.
+
+Run the tests:
+
+```bash
+python3 -m unittest discover -s .
+```
+
+The test checks that the endpoint returns HTTP status code 200 and the expected response message.
+
+## 4. Jenkins Pipeline
+
+The `Jenkinsfile` defines these stages:
+
+1. **Build** — prepares the application environment and dependencies.
+2. **Test** — executes the unit tests.
+3. **Deploy** — copies `app.py` into the mock deployment directory.
+4. **Run Application** — starts the Flask application.
+5. **Test Application** — executes the application tests again.
+
+The pipeline includes post-build messages for success and failure.
+
+## 5. Configure Jenkins
+
+1. Start Jenkins and open `http://localhost:8080`.
+2. Create a new item named `Python-MultiStage-Pipeline`.
+3. Select **Pipeline**.
+4. Under Pipeline, select **Pipeline script from SCM**.
+5. Choose Git and enter the GitHub repository URL.
+6. Set the branch to `main` and the script path to `Jenkinsfile`.
+7. Save and click **Build Now**.
+
+## 6. Expected Results
+
+- Dependencies are available to the application.
+- Unit tests pass.
+- The application file is copied to the deployment directory.
+- The Flask application starts.
+- Application tests pass.
+- Jenkins reports a successful pipeline execution.
+
+## 7. Additional Enhancements
+
+- Add a code quality stage using Flake8 or Pylint.
+- Build and deploy the application as a Docker container.
+- Add email or Slack notifications for pipeline results.
+
+## Conclusion
+
+This exercise demonstrates how Jenkins automates multiple stages of a Python application's development workflow, including testing, deployment, and application verification.
