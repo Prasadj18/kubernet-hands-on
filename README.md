@@ -472,3 +472,96 @@ The pipeline requires a valid `Jenkinsfile`, a configured Jenkins job, and acces
 
 This project demonstrates delivery metrics collection, Prometheus monitoring, alert rule configuration, Grafana visualization, and Jenkins-based pipeline automation. It provides a foundation for detecting operational issues and monitoring delivery performance in real time.
 
+
+# Exercise 7: Introduction to Continuous Integration (CI) and Jenkins
+
+## Objective
+To understand Continuous Integration (CI), learn Jenkins installation and configuration, and demonstrate a basic CI pipeline.
+
+## 1. What is Continuous Integration?
+
+Continuous Integration is a software development practice in which developers frequently integrate code changes into a shared repository. Automated builds and tests help detect errors early and improve software quality.
+
+### Key Features
+- Frequent code integration
+- Automated builds
+- Automated testing
+- Immediate feedback
+
+### Benefits
+- Early bug detection
+- Improved collaboration
+- Faster development cycles
+- Improved software quality
+
+## 2. CI Workflow
+
+1. Developer pushes code to a Git repository.
+2. The CI server detects code changes.
+3. The build process is triggered.
+4. Automated tests are executed.
+5. Results are reported to the developer.
+
+## 3. Introduction to Jenkins
+
+Jenkins is an open-source automation server used to automate software building, testing, and deployment. It supports CI/CD through pipelines and plugins.
+
+### Key Jenkins Concepts
+- **Job/Project:** A task executed by Jenkins.
+- **Build:** Execution of a configured process.
+- **Pipeline:** A sequence of automated stages.
+- **Plugins:** Extend Jenkins functionality.
+- **Nodes:** Machines on which Jenkins jobs execute.
+
+## 4. Jenkins Installation Using Docker
+
+Run Jenkins using Docker:
+
+```bash
+docker run -d --name jenkins \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  jenkins/jenkins:lts
+```
+
+Verify the container:
+
+```bash
+docker ps
+```
+
+Access Jenkins at:
+
+http://localhost:8080
+
+For a fresh installation, retrieve the initial administrator password:
+
+```bash
+docker exec -it jenkins bash
+cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+Use the password on the Jenkins setup page to complete the initial configuration.
+
+## 5. Practical CI Pipeline
+
+A Jenkins Pipeline named `Exercise-7-CI` was created and executed successfully.
+
+### Pipeline Stages
+1. **Checkout:** Retrieves the source code.
+2. **Build:** Executes the build step.
+3. **Test:** Runs the configured tests.
+4. **CI Success:** Confirms successful completion.
+
+### Execution Result
+- Pipeline created successfully.
+- Build #1 executed successfully.
+- All configured pipeline stages completed successfully.
+
+## 6. Result
+
+Successfully understood Continuous Integration, installed Jenkins using Docker, and demonstrated a basic CI pipeline with checkout, build, test, and success stages.
+
+## Conclusion
+
+Jenkins automates repetitive development tasks and provides feedback on code changes. Continuous Integration helps teams identify problems early and maintain software quality.
