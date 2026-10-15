@@ -311,3 +311,164 @@ The Flask application was containerized successfully, and the Docker SDK scripts
 
 minikube start
 
+# Exercise 6: Real-Time Operations Monitoring and Alerting
+
+## Objective
+Build a real-time monitoring system for a delivery service using Python, Prometheus, Grafana, Docker, and Jenkins.
+
+## Technologies Used
+- Python
+- Prometheus
+- Grafana
+- Docker
+- Jenkins
+- `prometheus-client`
+
+## Project Structure
+
+```text
+exercise-06-delivery-monitoring/
+├── delivery_metrics.py
+├── prometheus.yml
+├── alert_rules.yml
+├── Jenkinsfile
+└── README.md
+```
+
+## 1. Delivery Metrics Simulation
+
+The Python application simulates delivery operations and exposes metrics through an HTTP endpoint.
+
+Metrics collected:
+- `total_deliveries` — Total deliveries.
+- `pending_deliveries` — Pending deliveries.
+- `on_the_way_deliveries` — Deliveries in transit.
+- `average_delivery_time` — Delivery time observations in seconds.
+
+Install the dependency:
+
+```bash
+python -m pip install prometheus-client
+```
+
+Run the application:
+
+```bash
+python delivery_metrics.py
+```
+
+Access the metrics at:
+
+http://localhost:8000/metrics
+
+## 2. Prometheus Configuration
+
+Prometheus scrapes metrics from the Python application every 5 seconds.
+
+Configuration file: `prometheus.yml`
+
+The configuration defines:
+- Prometheus self-monitoring.
+- Delivery service metrics collection.
+- Alert rules file location.
+
+Start Prometheus using Docker:
+
+```powershell
+docker run -d --name prometheus `
+  -p 9090:9090 `
+  --add-host=host.docker.internal:host-gateway `
+  -v "${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml" `
+  -v "${PWD}/alert_rules.yml:/etc/prometheus/alert_rules.yml" `
+  prom/prometheus
+```
+
+Access Prometheus at:
+
+http://localhost:9090
+
+Verify targets at:
+
+http://localhost:9090/targets
+
+## 3. Alert Configuration
+
+Configuration file: `alert_rules.yml`
+
+Two alert rules are defined:
+
+- **HighPendingDeliveries:** Triggers when pending deliveries exceed 10 for 15 seconds.
+- **HighAverageDeliveryTime:** Triggers when average delivery time exceeds 30 seconds for 15 seconds.
+
+View alerts at:
+
+http://localhost:9090/alerts
+
+## 4. Grafana Dashboard
+
+Grafana visualizes delivery metrics collected by Prometheus.
+
+Start Grafana:
+
+```powershell
+docker run -d --name grafana -p 3000:3000 grafana/grafana
+```
+
+Access Grafana at:
+
+http://localhost:3000
+
+Default login for a fresh instance:
+- Username: `admin`
+- Password: `admin`
+
+Configure Prometheus as a data source using:
+
+```text
+http://host.docker.internal:9090
+```
+
+Create dashboard panels for:
+1. Total Deliveries
+2. Pending Deliveries
+3. On-the-Way Deliveries
+4. Average Delivery Time
+
+Average delivery time query:
+
+```promql
+average_delivery_time_sum / average_delivery_time_count
+```
+
+## 5. Jenkins Pipeline
+
+The `Jenkinsfile` defines pipeline stages for checking Docker availability, preparing the workspace, building the application image, running the application, and starting Prometheus and Grafana.
+
+Jenkins can be started using Docker:
+
+```powershell
+docker run -d --name jenkins `
+  -p 8080:8080 `
+  -p 50000:50000 `
+  -v jenkins_home:/var/jenkins_home `
+  jenkins/jenkins:lts
+```
+
+Access Jenkins at:
+
+http://localhost:8080
+
+The pipeline requires a valid `Jenkinsfile`, a configured Jenkins job, and access to the Docker daemon. The pipeline should be tested in the target environment before claiming successful automated execution.
+
+## 6. Testing and Verification
+
+- Verified the Python metrics endpoint at port 8000.
+- Confirmed that Prometheus started successfully.
+- Confirmed the `delivery_service` and `prometheus` targets were **UP**.
+- Configured alert rules for pending deliveries and delivery time.
+- Grafana dashboard and Jenkins pipeline require verification after setup.
+
+## Conclusion
+
+This project demonstrates delivery metrics collection, Prometheus monitoring, alert rule configuration, Grafana visualization, and Jenkins-based pipeline automation. It provides a foundation for detecting operational issues and monitoring delivery performance in real time.
+
