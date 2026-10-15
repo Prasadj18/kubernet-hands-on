@@ -565,3 +565,113 @@ Successfully understood Continuous Integration, installed Jenkins using Docker, 
 ## Conclusion
 
 Jenkins automates repetitive development tasks and provides feedback on code changes. Continuous Integration helps teams identify problems early and maintain software quality.
+
+
+# Exercise 8: Creating a Hello World Jenkins Job
+
+## Objective
+To create a simple shell script, push it to GitHub, and configure a Jenkins Freestyle job to execute the script automatically.
+
+## Technologies Used
+- Jenkins
+- Docker
+- Git
+- GitHub
+- Bash Shell Scripting
+
+## 1. Create the Shell Script
+
+Create a file named `hello-world.sh` with the following content:
+
+```bash
+#!/bin/bash
+echo "Hello, Jenkins!"
+```
+
+The script prints a greeting message when executed.
+
+## 2. Push the Script to GitHub
+
+Initialize a Git repository and commit the script:
+
+```bash
+git init
+git add hello-world.sh
+git commit -m "Add hello-world.sh"
+```
+
+Connect the local repository to GitHub:
+
+```bash
+git remote add origin https://github.com/<your-username>/devops-sample-code.git
+git branch -M main
+git push -u origin main
+```
+
+Replace `<your-username>` with your GitHub username.
+
+## 3. Start Jenkins Using Docker
+
+Run Jenkins:
+
+```bash
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+```
+
+Verify the container:
+
+```bash
+docker ps
+```
+
+Access Jenkins at:
+
+http://localhost:8080
+
+For a fresh Jenkins installation, retrieve the initial administrator password:
+
+```bash
+docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+Complete the initial setup and log in.
+
+## 4. Create a Jenkins Freestyle Job
+
+1. Open the Jenkins dashboard.
+2. Click **New Item**.
+3. Enter the job name `HelloWorld`.
+4. Select **Freestyle project** and click **OK**.
+5. Under **Source Code Management**, select **Git**.
+6. Enter the GitHub repository URL.
+7. Under **Build Steps**, select **Execute shell**.
+8. Add the command:
+
+```bash
+sh hello-world.sh
+```
+
+9. Save the job.
+
+**Note:** The Execute shell step requires a Jenkins environment that supports shell commands, such as the Linux-based Jenkins container.
+
+## 5. Execute the Job
+
+1. Open the `HelloWorld` job.
+2. Click **Build Now**.
+3. Open the build number.
+4. Select **Console Output**.
+
+Expected output:
+
+```text
++ echo 'Hello, Jenkins!'
+Hello, Jenkins!
+Finished: SUCCESS
+```
+
+## Result
+Successfully demonstrated how to store a shell script in GitHub and configure a Jenkins Freestyle job to execute it.
+
+## Conclusion
+Jenkins simplifies task automation by executing scripts through configured jobs. Integrating Jenkins with GitHub provides a foundation for automated build and test workflows.
