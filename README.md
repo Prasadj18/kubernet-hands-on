@@ -773,3 +773,231 @@ The pipeline includes post-build messages for success and failure.
 ## Conclusion
 
 This exercise demonstrates how Jenkins automates multiple stages of a Python application's development workflow, including testing, deployment, and application verification.
+
+# Exercise 10: Multi-Node Kubernetes Cluster with Multiple Applications and Replicas
+
+## Overview
+
+This exercise demonstrates deploying multiple Flask applications on a multi-node Kubernetes cluster using Minikube. Kubernetes Deployments manage the application replicas, while Services expose the applications for access and testing.
+
+## Objectives
+
+- Set up a three-node Minikube cluster.
+- Containerize two Python Flask applications using Docker.
+- Deploy applications using Kubernetes YAML manifests.
+- Run multiple replicas for availability and redundancy.
+- Distribute pods across different nodes.
+- Expose applications using NodePort Services.
+- Verify deployments and test application endpoints.
+
+## Architecture
+
+| Component | Replicas | Endpoint |
+|---|---:|---|
+| Product Catalog | 2 | `GET /products` |
+| Shopping Cart | 3 | `GET /cart`, `POST /cart` |
+
+**Cluster:** Minikube with 3 nodes  
+**Containerization:** Docker  
+**Orchestration:** Kubernetes  
+**Application framework:** Python Flask
+
+## Project Structure
+
+```text
+exercise-10-multi-node-kubernetes/
+├── dockerfile.product
+├── dockerfile.shopping
+├── product_catalog.py
+├── product_catalog_deployment.yaml
+├── product_catalog_service.yaml
+├── shopping_cart.py
+├── shopping_cart_deployment.yaml
+├── shopping_cart_service.yaml
+└── README.md
+```
+
+## Prerequisites
+
+Install and configure the following tools:
+
+- Docker Desktop
+- Minikube
+- kubectl
+- Git
+
+Verify the installations:
+
+```powershell
+docker --version
+minikube version
+kubectl version --client
+```
+
+## Step 1: Create the Multi-Node Cluster
+
+Start a Minikube profile with three nodes:
+
+```powershell
+minikube start --nodes 3 -p devops-multinode
+```
+
+Verify the cluster:
+
+```powershell
+minikube -p devops-multinode status
+kubectl get nodes
+```
+
+## Step 2: Enable the Registry Add-on
+
+Enable the Minikube registry add-on:
+
+```powershell
+minikube -p devops-multinode addons enable registry
+```
+
+## Step 3: Build the Docker Images
+
+Navigate to the exercise directory:
+
+```powershell
+cd D:\Kubernetes-Hands-On\exercise-10-multi-node-kubernetes
+```
+
+Build the Product Catalog image:
+
+```powershell
+docker build -f dockerfile.product -t product-catalog:latest .
+```
+
+Build the Shopping Cart image:
+
+```powershell
+docker build -f dockerfile.shopping -t shopping-cart:latest .
+```
+
+Verify the images:
+
+```powershell
+docker images
+```
+
+## Step 4: Load Images into Minikube
+
+Make both images available to the cluster:
+
+```powershell
+minikube -p devops-multinode image load product-catalog:latest
+minikube -p devops-multinode image load shopping-cart:latest
+```
+
+## Step 5: Deploy the Applications
+
+Apply the Product Catalog Deployment:
+
+```powershell
+kubectl apply -f product_catalog_deployment.yaml
+```
+
+Apply the Shopping Cart Deployment:
+
+```powershell
+kubectl apply -f shopping_cart_deployment.yaml
+```
+
+## Step 6: Expose the Applications
+
+Create the Product Catalog Service:
+
+```powershell
+kubectl apply -f product_catalog_service.yaml
+```
+
+Create the Shopping Cart Service:
+
+```powershell
+kubectl apply -f shopping_cart_service.yaml
+```
+
+## Step 7: Verify Deployments and Replicas
+
+Check the deployments:
+
+```powershell
+kubectl get deployments
+```
+
+Check the pods and their assigned nodes:
+
+```powershell
+kubectl get pods -o wide
+```
+
+Check the Services:
+
+```powershell
+kubectl get services
+```
+
+**Expected result:**
+
+- Product Catalog: 2 running replicas.
+- Shopping Cart: 3 running replicas.
+- Pods distributed across the three cluster nodes, as permitted by the scheduling configuration.
+
+## Step 8: Access the Applications
+
+Open separate terminals and run:
+
+```powershell
+minikube -p devops-multinode service product-catalog-service
+```
+
+```powershell
+minikube -p devops-multinode service shopping-cart-service
+```
+
+Use the URLs returned by Minikube for testing. The URLs and ports may differ between runs.
+
+## Step 9: Test the API Endpoints
+
+### Product Catalog
+
+Send a GET request to `/products`:
+
+```powershell
+curl.exe http://127.0.0.1:<PRODUCT_PORT>/products
+```
+
+The endpoint should return the available product list.
+
+### Shopping Cart
+
+Retrieve the cart:
+
+```powershell
+curl.exe http://127.0.0.1:<SHOPPING_PORT>/cart
+```
+
+Add an item to the cart:
+
+```powershell
+curl.exe -X POST http://127.0.0.1:<SHOPPING_PORT>/cart -H "Content-Type: application/json" -d "{\"id\":1,\"name\":\"Laptop\",\"quantity\":1}"
+```
+
+Replace the port placeholders with the ports provided by Minikube.
+
+## Key Learnings
+
+- Creating and managing multi-node Kubernetes clusters.
+- Building Docker images for Python applications.
+- Deploying multiple applications using Kubernetes YAML manifests.
+- Managing replicas with Deployments and ReplicaSets.
+- Exposing applications through Kubernetes Services.
+- Inspecting pod placement across cluster nodes.
+- Testing REST API endpoints running inside Kubernetes.
+
+## Conclusion
+
+This exercise demonstrates deploying two containerized Flask applications on a multi-node Kubernetes cluster. The Product Catalog runs with two replicas, while the Shopping Cart runs with three replicas. Kubernetes Deployments, Services, and pod scheduling help demonstrate application scaling, availability, and workload distribution.
